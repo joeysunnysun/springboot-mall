@@ -17,7 +17,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product getProductById(Integer productId) {
-        String sql = "SELECT productName, category, imageUrl, price, stock, description, " +
+        String sql = "SELECT productId, productName, category, imageUrl, price, stock, description, " +
                 "createdDate, lastModifiedDate FROM product WHERE productId = :productId ";
 
         Map<String, Object> map = new HashMap<>();
