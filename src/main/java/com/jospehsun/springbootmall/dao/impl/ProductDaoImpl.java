@@ -5,6 +5,7 @@ import com.jospehsun.springbootmall.dto.ProductRequest;
 import com.jospehsun.springbootmall.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,10 +38,10 @@ public class ProductDaoImpl implements ProductDao {
     public Integer createProductById(ProductRequest productRequest) {
         String sql = "INSERT INTO product(productName, category, imageUrl, price, stock, " +
                 "description, createdDate, lastModifiedDate) " +
-                "VALUES (:productName, :category, :imageUrl, :price, :stock, :description, " +
+                "VALUES (:productName, :category.name, :imageUrl, :price, :stock, :description, " +
                 ":createdDate, :lastModifiedDate) ";
 
-        Map<String, Object> map = new HashMap<>();
+        /*Map<String, Object> map = new HashMap<>();
         map.put("productName", productRequest.getProductName());
         map.put("category", productRequest.getCategory().toString());
         map.put("imageUrl", productRequest.getImageUrl());
@@ -50,14 +51,38 @@ public class ProductDaoImpl implements ProductDao {
 
         Date now = new Date();
         map.put("createdDate", now);
-        map.put("lastModifiedDate", now);
+        map.put("lastModifiedDate", now);*/
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);
-
+        /*namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource(map), keyHolder);*/
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(productRequest);
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
         int productId = keyHolder.getKey().intValue();
 
         return productId;
+    }
+
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+        String sql = "UPDATE product SET productName = :productName, category = :category, imageUrl = :imageUrl, " +
+                "price = :price, stock = :stock, description = :description, lastModifiedDate = :lastModifiedDate" +
+                " WHERE productId = :productId ";
+
+        /*Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+
+        map.put("productName", productRequest.getProductName());
+        map.put("category", productRequest.getCategory());
+        map.put("imageUrl", productRequest.getImageUrl());
+        map.put("price", productRequest.getPrice());
+        map.put("stock", productRequest.getStock());
+        map.put("description", productRequest.getDescription());
+
+        map.put("lastModifiedDate", new Date());*/
+
+        BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(productRequest);
+        namedParameterJdbcTemplate.update(sql, params);
+        /*namedParameterJdbcTemplate.update(sql, map);*/
     }
 }

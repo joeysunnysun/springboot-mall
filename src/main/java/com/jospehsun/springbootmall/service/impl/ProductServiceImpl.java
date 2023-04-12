@@ -7,6 +7,8 @@ import com.jospehsun.springbootmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class ProductServiceImpl implements ProductService {
 
@@ -21,6 +23,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Integer createProduct(ProductRequest productRequest) {
+        productRequest.setCreatedDate(new Date());
+        productRequest.setLastModifiedDate(new Date());
         return productDao.createProductById(productRequest);
+    }
+
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+        productRequest.setLastModifiedDate(new Date());
+        productDao.updateProduct(productId, productRequest);
     }
 }
