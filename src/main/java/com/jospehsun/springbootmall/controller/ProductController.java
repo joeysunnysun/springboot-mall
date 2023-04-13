@@ -45,6 +45,8 @@ public class ProductController {
         if (product == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        productRequest.setProductId(productId);
+
 
         // 修改商品的數據
         productService.updateProduct(productId, productRequest);

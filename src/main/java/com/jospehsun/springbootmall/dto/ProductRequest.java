@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class ProductRequest {
 
+    private Integer productId;
     @NotNull
     private String productName;
     @NotNull
@@ -83,5 +84,13 @@ public class ProductRequest {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }

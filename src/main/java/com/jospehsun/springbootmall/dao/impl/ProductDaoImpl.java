@@ -65,7 +65,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void updateProduct(Integer productId, ProductRequest productRequest) {
-        String sql = "UPDATE product SET productName = :productName, category = :category, imageUrl = :imageUrl, " +
+        String sql = "UPDATE product SET productName = :productName, category = :category.name, imageUrl = :imageUrl, " +
                 "price = :price, stock = :stock, description = :description, lastModifiedDate = :lastModifiedDate" +
                 " WHERE productId = :productId ";
 
@@ -80,7 +80,7 @@ public class ProductDaoImpl implements ProductDao {
         map.put("description", productRequest.getDescription());
 
         map.put("lastModifiedDate", new Date());*/
-
+//        productRequest.setProductId(productId);
         BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(productRequest);
         namedParameterJdbcTemplate.update(sql, params);
         /*namedParameterJdbcTemplate.update(sql, map);*/

@@ -24,7 +24,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Integer createProduct(ProductRequest productRequest) {
         productRequest.setCreatedDate(new Date());
-        productRequest.setLastModifiedDate(new Date());
         return productDao.createProductById(productRequest);
     }
 
