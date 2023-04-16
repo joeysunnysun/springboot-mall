@@ -6,20 +6,32 @@ import com.jospehsun.springbootmall.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public class ProductDaoImpl implements ProductDao {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+
+    @Override
+    public List<Product> getProducts() {
+        String sql = "SELECT productId, productName, category, imageUrl, price, stock, description, " +
+                "createdDate, lastModifiedDate " +
+                "FROM product ";
+
+        Map<String, Object> map = new HashMap<>();
+
+        List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new BeanPropertyRowMapper<>(Product.class));
+        return productList;
+    }
 
     @Override
     public Product getProductById(Integer productId) {
