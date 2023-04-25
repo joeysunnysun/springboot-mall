@@ -46,7 +46,7 @@ public class ProductDaoImpl implements ProductDao {
 
         // 查詢條件
         addFilteringSql(sql, map, productQueryParams);
-        
+
 //        if (productQueryParams.getCategory() != null) {
 //            sql = sql + "AND category = :category ";
 //            map.put("category", productQueryParams.getCategory().toString());
