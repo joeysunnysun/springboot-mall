@@ -32,12 +32,12 @@ public class ProductControllerTest {
     @Test
     public void getProduct_success() throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/products/{productId}", 1);
+                .get("/products/{productId}", 2);
 
         mockMvc.perform(requestBuilder)
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.productName", equalTo("Cindy")))
+                .andExpect(jsonPath("$.productName", equalTo("蘋果（澳洲）")))
                 .andExpect(jsonPath("$.category", equalTo("FOOD")))
                 .andExpect(jsonPath("$.imageUrl", notNullValue()))
                 .andExpect(jsonPath("$.price", notNullValue()))
@@ -158,7 +158,7 @@ public class ProductControllerTest {
         productRequest.setProductName("test food product");
         productRequest.setCategory(ProductCategory.FOOD);
         productRequest.setImageUrl("http://test.com");
-        productRequest.setProductId(100);
+        productRequest.setPrice(100);
         productRequest.setStock(2);
 
         String json = objectMapper.writeValueAsString(productRequest);
@@ -177,7 +177,7 @@ public class ProductControllerTest {
     @Test
     public void deleteProduct_success() throws Exception{
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("products/{productId}", 5);
+                .delete("/products/{productId}", 5);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(204));
@@ -187,7 +187,7 @@ public class ProductControllerTest {
     @Test
     public void deleteProduct_deleteNonExistingProduct() throws Exception{
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("product/{productId}", 20000);
+                .delete("/products/{productId}", 20000);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(204));
@@ -220,7 +220,7 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.limit", notNullValue()))
                 .andExpect(jsonPath("$.offset", notNullValue()))
                 .andExpect(jsonPath("$.total", notNullValue()))
-                .andExpect(jsonPath("$.results", hasSize(2)));
+                .andExpect(jsonPath("$.results", hasSize(5)));
     }
 
     @Test
@@ -236,11 +236,11 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.offset", notNullValue()))
                 .andExpect(jsonPath("$.total", notNullValue()))
                 .andExpect(jsonPath("$.results", hasSize(5)))
-                .andExpect(jsonPath("$.results[0].productId", equalTo(6)))
-                .andExpect(jsonPath("$.results[1].productId", equalTo(5)))
-                .andExpect(jsonPath("$.results[2].productId", equalTo(7)))
-                .andExpect(jsonPath("$.results[3].productId", equalTo(4)))
-                .andExpect(jsonPath("$.results[4].productId", equalTo(2)));
+                .andExpect(jsonPath("$.results[0].productId", equalTo(1)))
+                .andExpect(jsonPath("$.results[1].productId", equalTo(7)))
+                .andExpect(jsonPath("$.results[2].productId", equalTo(6)))
+                .andExpect(jsonPath("$.results[3].productId", equalTo(8)))
+                .andExpect(jsonPath("$.results[4].productId", equalTo(5)));
     }
 
     @Test
@@ -251,13 +251,14 @@ public class ProductControllerTest {
                 .param("offset", "2");
 
         mockMvc.perform(requestBuilder)
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.limit", notNullValue()))
                 .andExpect(jsonPath("$.offset", notNullValue()))
                 .andExpect(jsonPath("$.total", notNullValue()))
                 .andExpect(jsonPath("$.results", hasSize(2)))
-                .andExpect(jsonPath("$.results[0].productId", equalTo(5)))
-                .andExpect(jsonPath("$.results[0].productId", equalTo(4)));
+                .andExpect(jsonPath("$.results[0].productId", equalTo(7)))
+                .andExpect(jsonPath("$.results[0].productId", equalTo(7)));
     }
 
 }
