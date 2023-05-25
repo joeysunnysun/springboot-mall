@@ -1,8 +1,10 @@
 package com.jospehsun.springbootmall.dao.impl;
 
 import com.jospehsun.springbootmall.dao.OrderDao;
+import com.jospehsun.springbootmall.model.Order;
 import com.jospehsun.springbootmall.model.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,11 +20,41 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    @Override
+    public Order getOrderById(Integer orderId) {
+        String sql = "SELECT orderId, userId, totalAmount, createdDate, lastModifiedDate " +
+                "FROM `order` WHERE orderId = :orderId ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderId", orderId);
+
+        List<Order> orderList = namedParameterJdbcTemplate.query(sql, map, new BeanPropertyRowMapper<>(Order.class));
+
+        if (orderList.size() > 0) {
+            return orderList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public List<OrderItem> getOrderItemsByOrderId(Integer orderId) {
+        String sql = "SELECT orderItem.orderItemId, orderItem.orderId, orderItem.productId, orderItem.quantity, orderItem.amount, " +
+                "product.productName, product.imageUrl " +
+                "FROM orderItem as orderItem " +
+                "LEFT JOIN product as product ON orderItem.productId = product.productId " +
+                "WHERE orderItem.orderId = :orderId ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("orderId", orderId);
+
+        return namedParameterJdbcTemplate.query(sql, map, new BeanPropertyRowMapper<>(OrderItem.class));
+    }
 
     @Override
     public Integer createOrder(Integer userId, Integer totalAmount) {
         String sql = "INSERT INTO `order` (userId, totalAmount, createdDate, lastModifiedDate) " +
-                "VALUES (:userId, :totalAmount, :createdDate, :lastModifiedDate)";
+                "VALUES (:userId, :totalAmount, :createdDate, :lastModifiedDate) ";
 
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
