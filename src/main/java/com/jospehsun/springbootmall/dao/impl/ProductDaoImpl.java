@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +133,20 @@ public class ProductDaoImpl implements ProductDao {
         BeanPropertySqlParameterSource params = new BeanPropertySqlParameterSource(productRequest);
         namedParameterJdbcTemplate.update(sql, params);
         /*namedParameterJdbcTemplate.update(sql, map);*/
+    }
+
+    @Override
+    public void updateStock(Integer productId, Integer stock) {
+        String sql = "UPDATE product SET stock = :stock, lastModifiedDate = :lastModifiedDate " +
+                "WHERE  productId = :productId ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+        map.put("stock", stock);
+        map.put("lastModifiedDate", new Date());
+
+        namedParameterJdbcTemplate.update(sql, map);
+
     }
 
     @Override
